@@ -25,6 +25,7 @@ def setup_db(app, refresh=False):
     
     if refresh:
         db.drop_all()
+
     db.create_all()
 
 
@@ -33,7 +34,7 @@ class Actor(db.Model):
     id = Column(Integer, primary_key=True)
 
     name = Column(String, nullable=False)
-    age = Column(Integer)
+    age = Column(Integer, nullable=False)
     gender = Column(String)
 
     '''
