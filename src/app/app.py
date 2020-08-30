@@ -2,22 +2,31 @@ import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from .models import setup_db, Movie, Actor
+from ..models import setup_db, Movie, Actor
+
 
 def create_app(test_config=None):
-    # create and configure the app
-    app = Flask(__name__)
-    CORS(app)
-    setup_db(app, refresh=True)
+  # create and configure the app
+  app = Flask(__name__)
+  CORS(app)
+  setup_db(app, refresh=False)
 
-    return app
+  
+
+  return app
 
 app = create_app()
 
-'''
+
 if __name__ == '__main__':
-    APP.run(host='0.0.0.0', port=8080, debug=True)
-'''
+    app.run(host='0.0.0.0', port=8080, debug=True)
+
+@app.after_request
+def after_request(response):
+  response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
+  response.headers.add('Access-Control-Allow-Methods', 'GET,PATCH,POST,DELETE,OPTIONS')
+  return response
+
 
 @app.route('/')
 def hello():
@@ -38,17 +47,17 @@ GET /actors
 '''
 @app.route('/actors', methods=['GET'])
 def get_actors():
-    actors = Actor.query.all()
+  actors = Actor.query.all()
 
-    if actors == None:
-      abort(404)
+  if actors == None:
+    abort(404)
 
-    f_actors = [actors.format() for actor in actors]
+  f_actors = [actor.format() for actor in actors]
 
-    return jsonify({
-      'success': True,
-      'actors': f_actors
-    })
+  return jsonify({
+    'success': True,
+    'actors': f_actors
+  })
 
 
 '''
@@ -57,7 +66,7 @@ DELETE /actors/:id
 '''
 @app.route('/actors/<int:actor_id>', methods=['DELETE'])
 def delete_actor(f, drink_id):
-    pass
+  pass
 
 '''
 POST /actors
@@ -65,7 +74,32 @@ POST /actors
 '''
 @app.route('/actors', methods=['POST'])
 def post_actor():
-    pass
+  body = request.get_json()
+  
+  if body == None:
+    abort(422)
+
+  name = body.get('name', None)
+  age = body.get('age',None)
+  gender = body.get('gender', None)
+
+  if (name==None) or (age==None) or (gender==None):
+    abort(422)
+  
+  actor = Actor(
+    name = name,
+    age=age,
+    gender=gender
+  )
+
+  actor.insert()
+
+  return jsonify({
+    'success': True,
+    'created_id': actor.id
+  })
+    
+
 
 
 
@@ -80,7 +114,7 @@ GET /movies
 '''
 @app.route('/movies', methods=['GET'])
 def get_movies():
-    pass
+  pass
 
 
 '''
@@ -89,7 +123,7 @@ DELETE /movies/:id
 '''
 @app.route('/movies/<int:movie_id>', methods=['DELETE'])
 def delete_movie(f, drink_id):
-    pass
+  pass
 
 '''
 POST /movies
@@ -97,7 +131,7 @@ POST /movies
 '''
 @app.route('/movies', methods=['POST'])
 def post_movie():
-    pass
+  pass
 
 
 '''
@@ -111,11 +145,11 @@ def post_movie():
 '''
 @app.errorhandler(422)
 def unprocessable(error):
-    return jsonify({
-                    "success": False, 
-                    "error": 422,
-                    "message": "unprocessable"
-                    }), 422
+  return jsonify({
+                  "success": False, 
+                  "error": 422,
+                  "message": "unprocessable"
+                  }), 422
 
 '''
 404 - not found
@@ -141,3 +175,4 @@ def auth_error(error):
         'message': 'Unauthorized'
     }), 401
 '''
+

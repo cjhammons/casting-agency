@@ -30,6 +30,7 @@ def setup_db(app, refresh=False):
 
 
 class Actor(db.Model):
+    __tablename__='actors'
     # Autoincrementing, unique primary key
     id = Column(Integer, primary_key=True)
 
@@ -37,6 +38,16 @@ class Actor(db.Model):
     age = Column(Integer, nullable=False)
     gender = Column(String)
 
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
     '''
     format()
         representation of the Actor model
@@ -44,17 +55,30 @@ class Actor(db.Model):
     def format(self):
         return {
             'id': self.id,
-            'name': self.title,
+            'name': self.name,
             'age': self.age,
             'gender': self.gender
         }
 
 class Movie(db.Model):
+    __tablename__='movies'
     # Autoincrementing, unique primary key
     id = Column(Integer, primary_key=True)
 
     title = Column(String, nullable=False)
     release_date = Column(String)
+
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
     '''
     format()

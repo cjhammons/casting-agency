@@ -2,8 +2,9 @@ import os
 import unittest
 import json
 from flask_sqlalchemy import SQLAlchemy
-from app import create_app
-from models import setup_db, Actor, Movie
+
+from src.app.app import create_app
+from src.models import setup_db, Actor, Movie
 
 class CastingAgencyTestCase(unittest.TestCase):
 
@@ -12,11 +13,12 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.client = self.app.test_client
         self.database_name = "castingagency"
 
-        db_username = os.getenv('DB_USERNAME')
-        db_password = os.getenv('DB_PASSWORD')
-        db_url = os.getenv('DB_URL')
-        db_name = os.getenv('DB_NAME')
+        self.db_username = os.getenv('DB_USERNAME')
+        self.db_password = os.getenv('DB_PASSWORD')
+        self.db_url = os.getenv('DB_URL')
+        self.db_name = os.getenv('DB_NAME')
         self.database_path = "postgres://{}:{}@{}/{}".format(db_username, db_password, db_url, db_name)
+        print('Connecting test database ')
         
         setup_db(self.app, self.database_path)
 
