@@ -9,14 +9,14 @@ from app import create_app
 class CastingTestCase(unittest.TestCase):
 
     def setUp(self):
+        self.app = create_app()
+        self.client = self.app.test_client
         self.db_username = os.getenv('DB_USERNAME')
         self.db_password = os.getenv('DB_PASSWORD')
         self.db_url = os.getenv('DB_URL')
         self.db_name = os.getenv('DB_NAME')
         self.database_path = "postgres://{}:{}@{}/{}".format(self.db_username, self.db_password, self.db_url, self.db_name)
-
-        self.app = create_app()
-        self.client = self.app.test_client
+        
         
         setup_db(self.app,refresh=True)
 
@@ -26,8 +26,22 @@ class CastingTestCase(unittest.TestCase):
             # create all tables
             self.db.create_all()
 
+        self.actor = Actor(
+            name='Billy Bob',
+            age=22,
+            gender='Male'
+        )
+        self.actor.insert()
+
+        self.movie = Movie(
+            title='The Thing from Outer space',
+            release_date='1/1/2020'
+        )
+        self.movie.insert()
+
     def tearDown(self):
-        pass
+        self.actor.delete()
+        self.movie.delete()
 
 
     '''
@@ -57,10 +71,22 @@ class CastingTestCase(unittest.TestCase):
     '''
 
     def test_delete_actors_success(self):
-        pass
+        id = self.actor.id
+        res = self.client().delete('/actors/' + str(id))
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertFalse(Actor.query.get(id))
 
     def test_delete_actors_failure(self):
-        pass
+        id = -1
+        res = self.client().delete('/actors/' + str(id))
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(Actor.query.get(id))
 
     '''
     POST /actors tests

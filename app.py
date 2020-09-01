@@ -2,6 +2,8 @@ import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+import dateutil.parser
+import babel
 from models import setup_db, Movie, Actor
 
 
@@ -24,6 +26,15 @@ def after_request(response):
   response.headers.add('Access-Control-Allow-Methods', 'GET,PATCH,POST,DELETE,OPTIONS')
   return response
 
+def format_datetime(value, format='medium'):
+  date = dateutil.parser.parse(value)
+  if format == 'full':
+      format="EEEE MMMM, d, y 'at' h:mma"
+  elif format == 'medium':
+      format="EE MM, dd, y h:mma"
+  return babel.dates.format_datetime(date, format)
+
+app.jinja_env.filters['datetime'] = format_datetime
 
 @app.route('/')
 def hello():
@@ -62,7 +73,7 @@ DELETE /actors/:id
   Takes param <id> and deletes the corresponding actor
 '''
 @app.route('/actors/<int:actor_id>', methods=['DELETE'])
-def delete_actor(f, drink_id):
+def delete_actor(f, actor_id):
   pass
 
 '''
