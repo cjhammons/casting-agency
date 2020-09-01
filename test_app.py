@@ -55,7 +55,6 @@ class CastingTestCase(unittest.TestCase):
     '''
     def test_get_actors_success(self):
         res = self.client().get('/actors')
-        print(res.data)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
