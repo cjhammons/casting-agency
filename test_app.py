@@ -3,24 +3,22 @@ import unittest
 import json
 from flask_sqlalchemy import SQLAlchemy
 
-from src.app.app import create_app
-from src.models import setup_db, Actor, Movie
+from models import setup_db, Actor, Movie
+from app import create_app
 
-class CastingAgencyTestCase(unittest.TestCase):
+class CastingTestCase(unittest.TestCase):
 
-    def setup(self):
-        self.app = create_app()
-        self.client = self.app.test_client
-        self.database_name = "castingagency"
-
+    def setUp(self):
         self.db_username = os.getenv('DB_USERNAME')
         self.db_password = os.getenv('DB_PASSWORD')
         self.db_url = os.getenv('DB_URL')
         self.db_name = os.getenv('DB_NAME')
-        self.database_path = "postgres://{}:{}@{}/{}".format(db_username, db_password, db_url, db_name)
-        print('Connecting test database ')
+        self.database_path = "postgres://{}:{}@{}/{}".format(self.db_username, self.db_password, self.db_url, self.db_name)
+
+        self.app = create_app()
+        self.client = self.app.test_client
         
-        setup_db(self.app, self.database_path)
+        setup_db(self.app,refresh=True)
 
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -43,6 +41,7 @@ class CastingAgencyTestCase(unittest.TestCase):
     '''
     def test_get_actors_success(self):
         res = self.client().get('/actors')
+        print(res.data)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
