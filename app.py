@@ -4,7 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import dateutil.parser
 import babel
-from models import setup_db, Movie, Actor
+from .models import setup_db, Movie, Actor
+from .auth import AuthError, requires_auth
 
 
 def create_app(test_config=None, database_path=None):
@@ -54,7 +55,8 @@ def create_app(test_config=None, database_path=None):
     Returns all actors
   '''
   @app.route('/actors', methods=['GET'])
-  def get_actors():
+  @requires_auth('view:actors')
+  def get_actors(f):
     actors = Actor.query.all()
 
     if actors == None:
@@ -72,6 +74,7 @@ def create_app(test_config=None, database_path=None):
     Takes param <id> and deletes the corresponding actor
   '''
   @app.route('/actors/<int:actor_id>', methods=['DELETE'])
+  @requires_auth('delete:actor')
   def delete_actor(f, actor_id):
     return jsonify({
       'not': 'implemented'
@@ -81,8 +84,10 @@ def create_app(test_config=None, database_path=None):
   POST /actors
     Creates a new actor
   '''
+
   @app.route('/actors', methods=['POST'])
-  def post_actor():
+  @requires_auth('add:actor')
+  def post_actor(f):
     body = request.get_json()
     
     if body == None:
@@ -107,7 +112,17 @@ def create_app(test_config=None, database_path=None):
       'success': True,
       'created_id': actor.id
     })
-      
+
+    '''
+    PATCH /actors
+      Updates properties of existing actors
+    '''
+    @app.route('/actors', methods=['PATCH'])
+    @requries_auth('edit:actor')
+    def patch_actor(f):
+      return jsonify({
+      'not': 'implemented'
+    })  
 
 
 
@@ -122,9 +137,18 @@ def create_app(test_config=None, database_path=None):
     Returns all movies
   '''
   @app.route('/movies', methods=['GET'])
-  def get_movies():
+  @requires_auth('view:movies')
+  def get_movies(f):
+    movies = Movie.query.all()
+
+    if movies == None:
+      abort(404)
+
+    f_movies = [movie.format() for movie in movies]
+
     return jsonify({
-      'not': 'implemented'
+      'success': True,
+      'actors': f_movies
     })
 
 
@@ -134,6 +158,7 @@ def create_app(test_config=None, database_path=None):
     Takes param <id> and deletes the corresponding movie
   '''
   @app.route('/movies/<int:movie_id>', methods=['DELETE'])
+  @requires_auth('delete:movie')
   def delete_movie(f, drink_id):
     return jsonify({
       'not': 'implemented'
@@ -145,12 +170,22 @@ def create_app(test_config=None, database_path=None):
     Creates a new movie
   '''
   @app.route('/movies', methods=['POST'])
+  @requires_auth('add:movie')
   def post_movie():
     return jsonify({
       'not': 'implemented'
     })
 
-
+  '''
+  PATCH /movies
+    Updates properties of existing actors
+  '''
+  @app.route('/movies', methods=['PATCH'])
+  @requires_auth('edit:movie')
+  def patch_movie():
+    return jsonify({
+    'not': 'implemented'
+  })  
 
   '''
   -------------------------------------------------------------------------------------------------------------
@@ -164,35 +199,33 @@ def create_app(test_config=None, database_path=None):
   @app.errorhandler(422)
   def unprocessable(error):
     return jsonify({
-                    "success": False, 
-                    "error": 422,
-                    "message": "unprocessable"
-                    }), 422
+      "success": False, 
+      "error": 422,
+      "message": "unprocessable"
+    }), 422
 
   '''
   404 - not found
   '''
   @app.errorhandler(404)
   def not_found(error):
-      return jsonify({
-        'success': False,
-        'error': 404,
-        'message': 'Not Found'
-      }), 404
+    return jsonify({
+      'success': False,
+      'error': 404,
+      'message': 'Not Found'
+    }), 404
 
   '''
   401 - Unauthorized
   '''
-
-  '''
   @app.errorhandler(AuthError)
   def auth_error(error):
-      return jsonify({
-          'success': False,
-          'error': 401,
-          'message': 'Unauthorized'
-      }), 401
-  '''
+    return jsonify({
+        'success': False,
+        'error': 401,
+        'message': 'Unauthorized'
+    }), 401
+  
     
   return app
 

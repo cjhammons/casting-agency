@@ -141,3 +141,5 @@ env/
 api-run.sh
 todo.txt
 unittest-run.sh
+ionic-run.sh
+frontend/
