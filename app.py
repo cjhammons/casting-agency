@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import dateutil.parser
 import babel
+import sys
 from .models import setup_db, Movie, Actor
 from .auth import AuthError, requires_auth
 
@@ -117,12 +118,37 @@ def create_app(test_config=None, database_path=None):
   PATCH /actors
     Updates properties of existing actors
   '''
-  @app.route('/actors', methods=['PATCH'])
+  @app.route('/actors/<int:actor_id>', methods=['PATCH'])
   @requires_auth('edit:actor')
-  def patch_actor(f):
+  def patch_actor(f, actor_id):
+    body = request.get_json()
+    if body == None:
+      abort(422)
+    
+    try:
+      actor = Actor.query.get(actor_id)
+      if actor == None:
+        abort(404)
+
+      if body['name']:
+        actor.name = body['name']
+      
+      if body['age']:
+        actor.age = body['age']
+      
+      if body['gender']:
+        actor.gender = body['gender']
+
+      actor.update()
+    except:
+      print(sys.exc_info())
+      abort(400)
+
+
     return jsonify({
-    'not': 'implemented'
-  })  
+      'success': True,
+      'actor': actor.format()
+    })  
 
 
 
