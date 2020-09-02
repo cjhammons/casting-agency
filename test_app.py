@@ -17,9 +17,9 @@ class CastingTestCase(unittest.TestCase):
         self.db_name = os.getenv('DB_NAME')
         self.database_path = "postgres://{}:{}@{}/{}".format(self.db_username, self.db_password, self.db_url, self.db_name)
         
-        #Current JWTs
-        self.executive_producer_jwt = ''
-        self.casting_assistant_jwt = ''
+        #Current JWTs 8:42 pm 9/1/2020
+        self.executive_producer_jwt = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlA2cnVTOU40aU94U0htTDdrTTdYbiJ9.eyJpc3MiOiJodHRwczovL2NqaGFtbW9ucy51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWY0ZWFmMTAyMDc2YTcwMDY3OGYxOGJmIiwiYXVkIjoiY2FzdGluZy1hZ2VuY3kiLCJpYXQiOjE1OTkwMTgyNDAsImV4cCI6MTU5OTEwNDYzNCwiYXpwIjoidGxhSW5DSFBZOVRIdjN6SjhhRlV1d0IyTmEwUzYwWjIiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImFkZDphY3RvciIsImFkZDptb3ZpZSIsImRlbGV0ZTphY3RvciIsImRlbGV0ZTptb3ZpZSIsImVkaXQ6YWN0b3IiLCJlZGl0Om1vdmllIiwidmlldzphY3RvcnMiLCJ2aWV3Om1vdmllcyJdfQ.JyCVkzz4U1NRmdgPVHMLR2_QcDoF2ANcKhm1ZCRLwcpI-MwmLBTEbTm-COSA-BU8xOmgBpbYTXr9FwzCqRoC4jvLM1PdQYzHODHdNwkzlo8Ywhdbnt-HqD8FEmA5xlT-chaCR4Mgl-HWkNp-Xus_xEGzw_SLvkyarPM50KLDaApNwCAK4UUQTIuQibe8xaiFmE27nbMtbs9jEXP5waIls6s4dvz6dUNifwkdjj_bs9hh6GoQBlUiDP6q2wkgv1EIQp6aA26pyxzP_116G_4bA7aoilN7-VY3fqGeogCJRa8j0-qhm1Rqp34TLLQtXfaf0SvXdKxWzeI_z7-tDI2s_w'
+        self.casting_assistant_jwt = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlA2cnVTOU40aU94U0htTDdrTTdYbiJ9.eyJpc3MiOiJodHRwczovL2NqaGFtbW9ucy51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWYwZjZlMDA3MTQ2OGMwMDEzMDAzYTYyIiwiYXVkIjoiY2FzdGluZy1hZ2VuY3kiLCJpYXQiOjE1OTkwMTgwODgsImV4cCI6MTU5OTEwNDQ4MiwiYXpwIjoidGxhSW5DSFBZOVRIdjN6SjhhRlV1d0IyTmEwUzYwWjIiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbInZpZXc6YWN0b3JzIiwidmlldzptb3ZpZXMiXX0.I3momkTT2A7uQCBp470ooJgxmR75Sxz_5eIkA2GBRfRXJSrkEmJBdUp-uNuKBETEIVOxk7fPoeaTswKTqWw_xz_wsPq2wj7N897W8d-Xh-TuEvQC1YTWCPnx7lRXozUsU4C2pC019b93kAH1Fd_segXk99xB4TQ6fUiRCmITU5wNb3D88l2Lfba2OvrdcbfI_eYKUcGLiTyueqgO2Vj9R7oWOYaeUPOorScYeLnTj9D8v9GVMMf_QKLx12CP6EGuC3h2ZieNxbsaruXUC-TRt5lKnF8JapgDbhTvIq95W3yJB7c-f65RhP7vY3AjiV5Cgu3woOKL4mGKm8KVwRRp7g'
         self.casting_director_jwt = ''
         
         setup_db(self.app,refresh=True)

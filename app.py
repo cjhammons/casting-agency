@@ -113,16 +113,16 @@ def create_app(test_config=None, database_path=None):
       'created_id': actor.id
     })
 
-    '''
-    PATCH /actors
-      Updates properties of existing actors
-    '''
-    @app.route('/actors', methods=['PATCH'])
-    @requries_auth('edit:actor')
-    def patch_actor(f):
-      return jsonify({
-      'not': 'implemented'
-    })  
+  '''
+  PATCH /actors
+    Updates properties of existing actors
+  '''
+  @app.route('/actors', methods=['PATCH'])
+  @requires_auth('edit:actor')
+  def patch_actor(f):
+    return jsonify({
+    'not': 'implemented'
+  })  
 
 
 
@@ -148,7 +148,7 @@ def create_app(test_config=None, database_path=None):
 
     return jsonify({
       'success': True,
-      'actors': f_movies
+      'movies': f_movies
     })
 
 
@@ -171,9 +171,28 @@ def create_app(test_config=None, database_path=None):
   '''
   @app.route('/movies', methods=['POST'])
   @requires_auth('add:movie')
-  def post_movie():
+  def post_movie(f):
+    body = request.get_json()
+    
+    if body == None:
+      abort(422)
+
+    title = body.get('title', None)
+    release_date = body.get('release_date',None)
+
+    if (release_date==None) or (title==None) :
+      abort(422)
+    
+    movie = Movie(
+      title=title,
+      release_date=release_date,
+    )
+
+    movie.insert()
+
     return jsonify({
-      'not': 'implemented'
+      'success': True,
+      'created_id': movie.id
     })
 
   '''
@@ -182,7 +201,7 @@ def create_app(test_config=None, database_path=None):
   '''
   @app.route('/movies', methods=['PATCH'])
   @requires_auth('edit:movie')
-  def patch_movie():
+  def patch_movie(f):
     return jsonify({
     'not': 'implemented'
   })  
