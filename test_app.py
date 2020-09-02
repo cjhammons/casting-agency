@@ -3,8 +3,8 @@ import unittest
 import json
 from flask_sqlalchemy import SQLAlchemy
 
-from models import setup_db, Actor, Movie
-from app import create_app
+from .models import setup_db, Actor, Movie
+from .app import create_app
 
 class CastingTestCase(unittest.TestCase):
 
@@ -172,6 +172,8 @@ class CastingTestCase(unittest.TestCase):
         id = self.actor.id
         res = self.client().patch('/actors/' + str(id), json={
             'name': self.test_name,
+            'age':self.actor.age,
+            'gender':self.actor.gender
         }, headers={
             'Bearer': self.executive_producer_jwt
         })
@@ -186,7 +188,9 @@ class CastingTestCase(unittest.TestCase):
     def test_patch_actors_success_age(self):
         id = self.actor.id
         res = self.client().patch('/actors/' + str(id), json={
-            'age': self.test_age,
+            'name': self.test_name,
+            'age':self.test_age,
+            'gender':self.actor.gender
          }, headers={
             'Bearer': self.executive_producer_jwt
         })
@@ -201,7 +205,9 @@ class CastingTestCase(unittest.TestCase):
     def test_patch_actors_success_gender(self):
         id = self.actor.id
         res = self.client().patch('/actors/' + str(id), json={
-            'gender': self.test_gender
+            'name': self.actor.name,
+            'age':self.actor.age,
+            'gender':self.test_gender
          }, headers={
             'Bearer': self.executive_producer_jwt
         })
@@ -339,6 +345,7 @@ class CastingTestCase(unittest.TestCase):
         id = self.movie.id
         res = self.client().patch('/movies/' + str(id), json={
             'title': self.test_name,
+            'release_date':self.movie.release_date
         }, headers={
             'Bearer': self.executive_producer_jwt
         })
@@ -352,6 +359,7 @@ class CastingTestCase(unittest.TestCase):
     def test_patch_movies_success_release_date(self):
         id = self.movie.id
         res = self.client().patch('/movies/' + str(id), json={
+            'name':self.movie.name,
             'release_date': self.test_release_date,
         }, headers={
             'Bearer': self.executive_producer_jwt

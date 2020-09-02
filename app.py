@@ -77,8 +77,21 @@ def create_app(test_config=None, database_path=None):
   @app.route('/actors/<int:actor_id>', methods=['DELETE'])
   @requires_auth('delete:actor')
   def delete_actor(f, actor_id):
+        
+    try:
+      actor = Actor.query.get(actor_id)
+
+      if actor == None:
+        abort(404)
+
+      actor.delete()
+    except:
+      print(sys.exc_info)
+      abort(400)
+    
     return jsonify({
-      'not': 'implemented'
+      'success': True,
+      'deleted': actor_id
     })
 
   '''
@@ -185,9 +198,22 @@ def create_app(test_config=None, database_path=None):
   '''
   @app.route('/movies/<int:movie_id>', methods=['DELETE'])
   @requires_auth('delete:movie')
-  def delete_movie(f, drink_id):
+  def delete_movie(f, movie_id):
+    try:
+      movie = Movie.query.get(movie_id)
+
+      if movie == None:
+        abort(404)
+
+      movie.delete()
+
+    except:
+      print(sys.exc_info)
+      abort(400)
+
     return jsonify({
-      'not': 'implemented'
+      'success': True,
+      'deleted': movie_id
     })
 
 
@@ -225,12 +251,35 @@ def create_app(test_config=None, database_path=None):
   PATCH /movies
     Updates properties of existing actors
   '''
-  @app.route('/movies', methods=['PATCH'])
+  @app.route('/movies/<int:movie_id>', methods=['PATCH'])
   @requires_auth('edit:movie')
-  def patch_movie(f):
+  def patch_movie(f, movie_id):
+    body = request.get_json()    
+    
+    if body == None:
+      abort(422)
+
+    if not body['title'] or not body['release_date']:
+      abort(422)
+
+    try:
+      movie = Movie.query.get(movie_id)
+      if movie==None:
+        abort(404)
+      
+      movie.title=body['title']   
+      movie.release_date = body['release_date']
+
+      movie.update()
+    except:
+      print(sys.exc_info)
+      abort(400)
+        
+
     return jsonify({
-    'not': 'implemented'
-  })  
+      'success': True,
+      'movie': movie.format()
+    })  
 
   '''
   -------------------------------------------------------------------------------------------------------------
