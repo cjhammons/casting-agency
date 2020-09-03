@@ -12,10 +12,10 @@ class CastingTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
         self.client = self.app.test_client
-        self.db_username = os.getenv('DB_USERNAME')
-        self.db_password = os.getenv('DB_PASSWORD')
-        self.db_url = os.getenv('DB_URL')
-        self.db_name = os.getenv('DB_NAME')
+        self.db_username = os.getenv('DATABASE_USERNAME')
+        self.db_password = os.getenv('DATABASE_PASSWORD')
+        self.db_url = os.getenv('DATABASE_URL')
+        self.db_name = os.getenv('DATABASE_NAME')
         self.database_path = "postgres://{}:{}@{}/{}".format(self.db_username, self.db_password, self.db_url, self.db_name)
         
         #Current JWTs 3:11 pm PDT 9/2/2020

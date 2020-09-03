@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
-export DB_USERNAME='coolguy'
-export DB_PASSWORD='meme'
-export DB_URL='localhost:5432'
-export DB_NAME='castingagency'
+export DATABASE_USERNAME='coolguy'
+export DATABASE_PASSWORD='meme'
+export DATABASE_URL='localhost:5432'
+export DATABASE_NAME='castingagency'
 export FLASK_APP=app.py
