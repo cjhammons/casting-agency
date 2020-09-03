@@ -5,8 +5,8 @@ from flask_cors import CORS
 import dateutil.parser
 import babel
 import sys
-from .models import setup_db, Movie, Actor
-from .auth import AuthError, requires_auth
+from .database.models import setup_db, Movie, Actor
+from .auth.auth import AuthError, requires_auth
 
 
 def create_app(test_config=None, database_path=None):
@@ -14,12 +14,6 @@ def create_app(test_config=None, database_path=None):
   app = Flask(__name__)
   CORS(app)
   setup_db(app, refresh=False)
-  
-  @app.after_request
-  def after_request(response):
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PATCH,POST,DELETE,OPTIONS')
-    return response
 
   def format_datetime(value, format='medium'):
     date = dateutil.parser.parse(value)
@@ -42,11 +36,9 @@ def create_app(test_config=None, database_path=None):
       'hello': 'world'
     })
 
-
-
   '''
   -------------------------------------------------------------------------------------------------------------
-                                              Actor endpoints
+                                Actor endpoints
   -------------------------------------------------------------------------------------------------------------
   '''
 
@@ -258,10 +250,6 @@ def create_app(test_config=None, database_path=None):
     
     if body == None:
       abort(422)
-
-    if not body['title'] or not body['release_date']:
-      abort(422)
-
     try:
       movie = Movie.query.get(movie_id)
       if movie==None:
@@ -273,7 +261,7 @@ def create_app(test_config=None, database_path=None):
       movie.update()
     except:
       print(sys.exc_info)
-      abort(400)
+      abort(422)
         
 
     return jsonify({
@@ -322,10 +310,3 @@ def create_app(test_config=None, database_path=None):
   
     
   return app
-
-
-
-
-
-
-
