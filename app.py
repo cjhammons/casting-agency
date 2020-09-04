@@ -5,8 +5,8 @@ from flask_cors import CORS
 import dateutil.parser
 import babel
 import sys
-from .auth.auth import AuthError, requires_auth
-from .database.models import setup_db, Movie, Actor
+from auth.auth import AuthError, requires_auth
+from database.models import setup_db, Movie, Actor
 
 
 def create_app(test_config=None, database_path=None):
