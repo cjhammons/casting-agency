@@ -3,7 +3,7 @@ import unittest
 import json
 from flask_sqlalchemy import SQLAlchemy
 
-from src.app import create_app
+from app import create_app
 from src.database.models import setup_db, Actor, Movie
 
 class CastingTestCase(unittest.TestCase):
