@@ -136,7 +136,7 @@ def create_app(test_config=None, database_path=None):
       actor.update()
     except:
       print(sys.exc_info())
-      abort(400)
+      abort(422)
 
 
     return jsonify({
