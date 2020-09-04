@@ -5,8 +5,8 @@ from flask_cors import CORS
 import dateutil.parser
 import babel
 import sys
-from .models import setup_db, Movie, Actor
-from .auth import AuthError, requires_auth
+from .auth.auth import AuthError, requires_auth
+from .database.models import setup_db, Movie, Actor
 
 
 def create_app(test_config=None, database_path=None):
@@ -14,17 +14,6 @@ def create_app(test_config=None, database_path=None):
   app = Flask(__name__)
   CORS(app)
   setup_db(app, refresh=False)
-
-  def format_datetime(value, format='medium'):
-    date = dateutil.parser.parse(value)
-    if format == 'full':
-      format="EEEE MMMM, d, y 'at' h:mma"
-    elif format == 'medium':
-      format="EE MM, dd, y h:mma"
-    return babel.dates.format_datetime(date, format)
-
-  app.jinja_env.filters['datetime'] = format_datetime
-
 
   '''
   Test endpoint pls ignore
@@ -310,6 +299,8 @@ def create_app(test_config=None, database_path=None):
   
     
   return app
+
+app = create_app()
 
 if __name__ == '__main__':
   app.run()

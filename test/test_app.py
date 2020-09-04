@@ -3,9 +3,8 @@ import unittest
 import json
 from flask_sqlalchemy import SQLAlchemy
 
-from src.app import create_app
-from src.database.models import setup_db, Actor, Movie
-
+from ..app import create_app
+from ..database.models import setup_db, Actor, Movie
 
 class CastingTestCase(unittest.TestCase):
 
@@ -70,9 +69,10 @@ class CastingTestCase(unittest.TestCase):
         res = self.client().get('/actors', headers={
              "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
+        self.assertEqual(res.status_code, 200)
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 200)
+       
         self.assertEqual(data['success'], True)
         self.assertTrue(data['actors'])
         self.assertTrue(len(data['actors']))
@@ -87,9 +87,10 @@ class CastingTestCase(unittest.TestCase):
         res = self.client().delete('/actors/' + str(id), headers={
             "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
-        data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
+        data = json.loads(res.data)
+        
         self.assertEqual(data['success'], True)
         self.assertEqual(Actor.query.get(id), None)
 
@@ -98,9 +99,10 @@ class CastingTestCase(unittest.TestCase):
         res = self.client().delete('/actors/' + str(id), headers={
              "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
+        self.assertEqual(res.status_code, 404)
+
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 404)
         self.assertEqual(data['success'], False)
 
     '''
@@ -115,9 +117,10 @@ class CastingTestCase(unittest.TestCase):
         }, headers={
              "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
+        self.assertEqual(res.status_code, 200)
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 200)
+        
         self.assertEqual(data['success'], True)
         self.assertTrue(data['created_id'], True)
 
@@ -135,9 +138,10 @@ class CastingTestCase(unittest.TestCase):
         }, headers={
              "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
+        self.assertEqual(res.status_code, 422)
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 422)
+        
         self.assertEqual(data['success'], False)
 
     def test_post_actors_failure_no_age(self):
@@ -147,9 +151,10 @@ class CastingTestCase(unittest.TestCase):
         }, headers={
              "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
+        self.assertEqual(res.status_code, 422)
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 422)
+        
         self.assertEqual(data['success'], False)
 
     def test_post_actors_failure_no_age(self):
@@ -159,9 +164,10 @@ class CastingTestCase(unittest.TestCase):
         }, headers={
              "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
+        self.assertEqual(res.status_code, 422)
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 422)
+        
         self.assertEqual(data['success'], False)
 
     '''
@@ -177,10 +183,8 @@ class CastingTestCase(unittest.TestCase):
         }, headers={
              "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
-
-        data = json.loads(res.data)
-
-        self.assertTrue(res.status_code, 200)
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.data)        
         self.assertEqual(data['success'], True)
         self.assertEqual(Actor.query.get(self.actor.id).name, self.test_name)
 
@@ -194,10 +198,8 @@ class CastingTestCase(unittest.TestCase):
          }, headers={
              "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
-
-        data = json.loads(res.data)
-
-        self.assertTrue(res.status_code, 200)
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.data)   
         self.assertEqual(data['success'], True)
         self.assertEqual(Actor.query.get(self.actor.id).age, self.test_age)
 
@@ -211,10 +213,8 @@ class CastingTestCase(unittest.TestCase):
          }, headers={
              "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
-
-        data = json.loads(res.data)
-
-        self.assertTrue(res.status_code, 200)
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.data)        
         self.assertEqual(data['success'], True)
         self.assertEqual(Actor.query.get(self.actor.id).gender, self.test_gender)
 
@@ -225,7 +225,7 @@ class CastingTestCase(unittest.TestCase):
          }, headers={
              "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
-        self.assertTrue(res.status_code, 422)
+        self.assertEqual(res.status_code, 422)
 
     def test_patch_actors_failure_bad_id(self):
         id = -1
@@ -234,10 +234,10 @@ class CastingTestCase(unittest.TestCase):
          }, headers={
              "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
-
+        self.assertEqual(res.status_code, 404)
         data = json.loads(res.data)
 
-        self.assertTrue(res.status_code, 404)
+        
         self.assertEqual(data['success'], False)
 
     '''
@@ -269,9 +269,9 @@ class CastingTestCase(unittest.TestCase):
         res = self.client().delete('/movies/' + str(id), headers={
             "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
-        data = json.loads(res.data)
-
         self.assertEqual(res.status_code, 200)
+        data = json.loads(res.data)
+        
         self.assertEqual(data['success'], True)
         self.assertEqual(Movie.query.get(id), None)
 
@@ -280,9 +280,10 @@ class CastingTestCase(unittest.TestCase):
         res = self.client().delete('/movies/' + str(id), headers={
             "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
+        self.assertEqual(res.status_code, 404)
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 404)
+        
         self.assertEqual(data['success'], False)
 
     '''
@@ -295,9 +296,10 @@ class CastingTestCase(unittest.TestCase):
         }, headers={
             "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
+        self.assertEqual(res.status_code, 200)
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 200)
+        
         self.assertEqual(data['success'], True)
         self.assertTrue(data['created_id'])
 
@@ -312,9 +314,7 @@ class CastingTestCase(unittest.TestCase):
             'release_date': self.test_release_date,
         }, headers={
             "Authorization": "Bearer {}".format(self.executive_producer_jwt)
-        })        
-        data = json.loads(res.data)
-
+        })    
         self.assertEqual(res.status_code, 422)
 
     def test_post_movies_failure_no_release_date(self):
@@ -323,9 +323,8 @@ class CastingTestCase(unittest.TestCase):
         }, headers={
             "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
-        data = json.loads(res.data)
-
         self.assertEqual(res.status_code, 422)
+        data = json.loads(res.data)        
         self.assertEqual(data['success'], False)
 
     '''
@@ -380,10 +379,9 @@ class CastingTestCase(unittest.TestCase):
          }, headers={
             "Authorization": "Bearer {}".format(self.executive_producer_jwt)
         })
-
-        data = json.loads(res.data)
-
         self.assertEqual(res.status_code, 404)
+        data = json.loads(res.data)
+        
         self.assertEqual(data['success'], False)
 
     '''
@@ -396,8 +394,9 @@ class CastingTestCase(unittest.TestCase):
         res = self.client().get('/actors', headers={
             "Authorization": "Bearer {}".format(self.casting_assistant_jwt)
         })
+        self.assertEqual(res.status_code, 200)
         data = json.loads(res.data)
-        self.assertTrue(res.status_code, 200)
+        
 
     def test_casting_assistant_authorized_get_movies(self):
         res = self.client().get('/movies', headers={
