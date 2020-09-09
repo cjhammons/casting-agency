@@ -1,5 +1,5 @@
 # casting-agency
-An API that enables a movie production company to keep track of their movies and actors.
+An API that enables a movie production company to keep track of their movies and actors. Final project for Udacity's Full Stack Nanodegree.
 
 # Setup
 ### Dependencies
