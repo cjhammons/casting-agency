@@ -97,7 +97,7 @@ Edits an actor's fields.
 All actor fields are required, even the ones that are not being changed.
 - ``name``
 - ``age``
-` ``gender``
+- ``gender``
 ### Response
 
 ```
