@@ -1,6 +1,9 @@
 # casting-agency
 An API that enables a movie production company to keep track of their movies and actors. Final project for Udacity's Full Stack Nanodegree.
 
+ # Live API
+ [The API is currently running here](https://cjhammons-casting-agency.herokuapp.com)
+
 # Setup
 ### Dependencies
 Dependencies can be installed with ``pip install -r requirements.txt``. The dependencies are a follows:
@@ -197,5 +200,4 @@ The API is secured using Auth0. There are 3 roles with the following permissions
  
  API calls are authenticated with a Bearer Token in the header. The file ``jwt.txt`` contains valid JWTs for a user of each role for testing.
  
- # Live API
- [The API is currently running here](https://cjhammons-casting-agency.herokuapp.com)
+
