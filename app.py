@@ -39,9 +39,8 @@ def create_app(test_config=None, database_path=None):
   @app.route('/actors', methods=['GET'])
   @requires_auth('view:actors')
   def get_actors(f):
-    actors = Actor.query.all()
 
-    if actors == None:
+    if (actors := Actor.query.all()) == None:
       abort(404)
 
     f_actors = [actor.format() for actor in actors]
@@ -60,9 +59,8 @@ def create_app(test_config=None, database_path=None):
   def delete_actor(f, actor_id):
         
     try:
-      actor = Actor.query.get(actor_id)
 
-      if actor == None:
+      if (actor := Actor.query.get(actor_id)) == None:
         abort(404)
 
       actor.delete()
@@ -83,9 +81,8 @@ def create_app(test_config=None, database_path=None):
   @app.route('/actors', methods=['POST'])
   @requires_auth('add:actor')
   def post_actor(f):
-    body = request.get_json()
     
-    if body == None:
+    if (body := request.get_json()) == None:
       abort(422)
 
     name = body.get('name', None)
@@ -115,13 +112,11 @@ def create_app(test_config=None, database_path=None):
   @app.route('/actors/<int:actor_id>', methods=['PATCH'])
   @requires_auth('edit:actor')
   def patch_actor(f, actor_id):
-    body = request.get_json()
-    if body == None:
+    if (body := request.get_json()) == None:
       abort(422)
     
     try:
-      actor = Actor.query.get(actor_id)
-      if actor == None:
+      if (actor := Actor.query.get(actor_id)) == None:
         abort(404)
 
       if body['name']:
@@ -159,9 +154,8 @@ def create_app(test_config=None, database_path=None):
   @app.route('/movies', methods=['GET'])
   @requires_auth('view:movies')
   def get_movies(f):
-    movies = Movie.query.all()
 
-    if movies == None:
+    if (movies := Movie.query.all()) == None:
       abort(404)
 
     f_movies = [movie.format() for movie in movies]
@@ -181,9 +175,8 @@ def create_app(test_config=None, database_path=None):
   @requires_auth('delete:movie')
   def delete_movie(f, movie_id):
     try:
-      movie = Movie.query.get(movie_id)
 
-      if movie == None:
+      if (movie := Movie.query.get(movie_id)) == None:
         abort(404)
 
       movie.delete()
@@ -205,9 +198,8 @@ def create_app(test_config=None, database_path=None):
   @app.route('/movies', methods=['POST'])
   @requires_auth('add:movie')
   def post_movie(f):
-    body = request.get_json()
     
-    if body == None:
+    if (body := request.get_json()) == None:
       abort(422)
 
     title = body.get('title', None)
@@ -235,13 +227,11 @@ def create_app(test_config=None, database_path=None):
   @app.route('/movies/<int:movie_id>', methods=['PATCH'])
   @requires_auth('edit:movie')
   def patch_movie(f, movie_id):
-    body = request.get_json()    
     
-    if body == None:
+    if (body := request.get_json()) == None:
       abort(422)
     try:
-      movie = Movie.query.get(movie_id)
-      if movie==None:
+      if (movie := Movie.query.get(movie_id))==None:
         abort(404)
       
       movie.title=body['title']   
